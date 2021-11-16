@@ -1,9 +1,11 @@
 package com.epam.spring.homework4.service;
 
 import com.epam.spring.homework4.dto.ReceiptDto;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface ReceiptService {
     ReceiptDto createReceipt(int userId);
     boolean deleteReceiptById(int id);
