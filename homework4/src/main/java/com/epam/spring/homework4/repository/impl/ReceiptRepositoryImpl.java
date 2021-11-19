@@ -1,5 +1,6 @@
 package com.epam.spring.homework4.repository.impl;
 
+import com.epam.spring.homework4.exceptions.NotFoundException;
 import com.epam.spring.homework4.model.Receipt;
 import com.epam.spring.homework4.repository.ReceiptRepository;
 import org.springframework.stereotype.Component;
@@ -33,7 +34,7 @@ public class ReceiptRepositoryImpl implements ReceiptRepository {
         return list.stream()
                 .filter(receipt -> receipt.getId() == receiptId)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Receipt is not found"));
+                .orElseThrow(() -> new NotFoundException("Receipt is not found"));
     }
 
     @Override
@@ -50,7 +51,7 @@ public class ReceiptRepositoryImpl implements ReceiptRepository {
         if (receipt != null){
             receipt.setActive(false);
         }else{
-            throw new RuntimeException("Opened receipt with id " + receiptId + " not found");
+            throw new NotFoundException("Opened receipt with id " + receiptId + " not found");
         }
         return true;
     }

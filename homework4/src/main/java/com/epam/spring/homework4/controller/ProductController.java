@@ -6,7 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,6 +20,7 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/product")
     public ProductDto createProduct(@RequestBody ProductDto productDto) {
+        validateProduct(productDto);
         return productService.createProduct(productDto);
     }
 
@@ -35,6 +39,7 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(value = "/product")
     public ProductDto updateProduct(@RequestBody ProductDto productDto) {
+        validateProduct(productDto);
         return productService.updateProduct(productDto);
     }
 
@@ -54,5 +59,23 @@ public class ProductController {
     @GetMapping(value = "/product/{code}")
     public ProductDto getProductByCode(@PathVariable String code) {
         return productService.getProductByCode(code);
+    }
+
+    private void validateProduct(ProductDto productDto){
+        Pattern p = Pattern.compile("\\W");
+        Matcher m = p.matcher(productDto.getName());
+        String symbols = "";
+        while (m.find()) {
+            symbols +=  Arrays.toString(m.group().toCharArray());
+        }
+        if (!symbols.isEmpty())throw new RuntimeException("Incorrect symbols was found " + symbols);
+
+        if (productDto.getCode().toCharArray().length > 4)throw new RuntimeException("Code is invalid");
+
+        if (!productDto.getCapacityType().equals("pcs") && !productDto.getCapacityType().equals("kg")) throw new RuntimeException("Capacity Type is invalid");
+
+        String capacity = Double.toString(productDto.getCapacity());
+        if(capacity.matches("[^.1-9]")) throw new RuntimeException("Capacity value is incorrect");
+
     }
 }

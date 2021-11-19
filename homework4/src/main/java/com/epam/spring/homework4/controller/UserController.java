@@ -17,6 +17,7 @@ public class UserController{
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/user")
     public UserDto createUser(@RequestBody UserDto userDto) {
+        validateUser(userDto);
         return userService.createUser(userDto);
     }
 
@@ -31,4 +32,12 @@ public class UserController{
     public UserDto getUserById(@PathVariable int userId) {
         return userService.getUserById(userId);
     }
+
+    private void validateUser(UserDto userDto){
+        String role = userDto.getRole();
+        if (!role.equals("CASHIER") && !role.equals("SENIOR_CASHIER") && !role.equals("COMMODITY_EXPERT")){
+            throw new RuntimeException("Role" + role + " is not validated");
+        }
+    }
+
 }

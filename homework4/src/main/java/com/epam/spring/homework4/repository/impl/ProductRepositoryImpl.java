@@ -1,5 +1,6 @@
 package com.epam.spring.homework4.repository.impl;
 
+import com.epam.spring.homework4.exceptions.NotFoundException;
 import com.epam.spring.homework4.model.Product;
 import com.epam.spring.homework4.repository.ProductRepository;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         return list.stream()
                 .filter(product -> product.getName().equals(name))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Product is not found"));
+                .orElseThrow(() -> new NotFoundException("Product is not found"));
     }
 
     @Override
@@ -37,7 +38,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         if (isDeleted){
             list.add(product);
         }else {
-            throw new RuntimeException("Product is not found");
+            throw new NotFoundException("Product is not found");
         }
         return product;
     }
@@ -52,7 +53,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         return list.stream()
                 .filter(product -> product.getId() == productId)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Product is not found"));
+                .orElseThrow(() -> new NotFoundException("Product is not found"));
     }
 
     @Override
@@ -60,6 +61,6 @@ public class ProductRepositoryImpl implements ProductRepository {
         return list.stream()
                 .filter(product -> product.getCode().equals(code))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Product is not found"));
+                .orElseThrow(() -> new NotFoundException("Product is not found"));
     }
 }

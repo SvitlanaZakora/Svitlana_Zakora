@@ -78,6 +78,7 @@ public class ProductServiceImpl implements ProductService {
                 .capacity(product.getCapacity())
                 .capacityType(product.getCapacityType())
                 .price(product.getPrice())
+                .code(product.getCode())
                 .build();
     }
 
@@ -88,6 +89,7 @@ public class ProductServiceImpl implements ProductService {
                 .capacity(productDto.getCapacity())
                 .capacityType(productDto.getCapacityType())
                 .price(productDto.getPrice())
+                .code(productDto.getCode())
                 .build();
     }
 }

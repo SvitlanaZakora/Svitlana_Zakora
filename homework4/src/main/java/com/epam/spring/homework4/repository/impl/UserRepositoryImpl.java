@@ -1,5 +1,6 @@
 package com.epam.spring.homework4.repository.impl;
 
+import com.epam.spring.homework4.exceptions.NotFoundException;
 import com.epam.spring.homework4.model.User;
 import com.epam.spring.homework4.repository.UserRepository;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class UserRepositoryImpl implements UserRepository {
         return list.stream()
                 .filter(user -> user.getLogin().equals(login))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("User is not found"));
+                .orElseThrow(() -> new NotFoundException("User is not found"));
     }
 
     @Override
@@ -31,6 +32,6 @@ public class UserRepositoryImpl implements UserRepository {
         return list.stream()
                 .filter(user -> user.getId() == userId)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("User is not found"));
+                .orElseThrow(() -> new NotFoundException("User is not found"));
     }
 }
