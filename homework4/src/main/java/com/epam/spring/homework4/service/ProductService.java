@@ -7,11 +7,11 @@ import java.util.List;
 
 @Service
 public interface ProductService {
-    ProductDto createProduct(ProductDto productDto);
-    ProductDto getProductByName(String name);
-    List<ProductDto> getAllProducts();
-    ProductDto updateProduct(ProductDto productDto);
+    ProductDto save(ProductDto productDto);
+    ProductDto findByName(String name);
+    List<ProductDto> findAll();
+    ProductDto update(ProductDto productDto);
     boolean deleteProduct(int productId);
-    ProductDto getProductById(int productId);
-    ProductDto getProductByCode(String code);
+    ProductDto getById(int productId);
+    ProductDto findByCode(String code);
 }

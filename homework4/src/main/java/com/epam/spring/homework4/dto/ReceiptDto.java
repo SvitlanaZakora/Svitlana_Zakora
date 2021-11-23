@@ -11,8 +11,6 @@ import java.util.List;
 public class ReceiptDto {
     private int id;
     private LocalDateTime creationDateTime;
-    private int ownerId;
-    private String ownerName;
     private List<ProductDto> products;
     private double total;
     private boolean active;

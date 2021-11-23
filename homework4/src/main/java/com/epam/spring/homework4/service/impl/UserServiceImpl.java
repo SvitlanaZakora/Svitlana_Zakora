@@ -1,39 +1,52 @@
 package com.epam.spring.homework4.service.impl;
 
 import com.epam.spring.homework4.dto.UserDto;
+import com.epam.spring.homework4.exceptions.DublicateEntryException;
 import com.epam.spring.homework4.service.UserService;
 import com.epam.spring.homework4.model.User;
 import com.epam.spring.homework4.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    @Autowired
     private final UserRepository userRepository;
 
     @Override
-    public UserDto createUser(UserDto userDto) {
+    public UserDto save(UserDto userDto) {
         log.info("create user with login {}",userDto.getLogin());
         User user = mapUserDtoToUser(userDto);
-        user = userRepository.createUser(user);
+        try {
+            user = userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new DublicateEntryException("Duplicate entry "+user.getLogin());
+        }
         return mapUserToUserDto(user);
     }
 
     @Override
-    public UserDto getUserByLogin(String login) {
+    public UserDto findByLogin(String login) {
         log.info("get user by login {} ",login);
-        User user = userRepository.getUserByLogin(login);
+        User user = userRepository.findByLogin(login);
         return mapUserToUserDto(user);
     }
 
     @Override
-    public UserDto getUserById(int userId) {
+    public UserDto findById(int userId) {
         log.info("get user by id {} ",userId);
-        User user = userRepository.getUserById(userId);
+        User user = userRepository.getById(userId);
         return mapUserToUserDto(user);
     }
 
@@ -53,4 +66,6 @@ public class UserServiceImpl implements UserService {
                 .pass(userDto.getPass())
                 .build();
     }
+
+
 }

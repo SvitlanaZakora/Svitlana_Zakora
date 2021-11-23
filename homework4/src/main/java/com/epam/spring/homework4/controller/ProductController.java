@@ -19,46 +19,46 @@ public class ProductController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/product")
-    public ProductDto createProduct(@RequestBody ProductDto productDto) {
+    public ProductDto save(@RequestBody ProductDto productDto) {
         validateProduct(productDto);
-        return productService.createProduct(productDto);
+        return productService.save(productDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/product/{name}")
-    public ProductDto getProductByName(@RequestParam String name) {
-        return productService.getProductByName(name);
+    @GetMapping(value = "/product/name/{name}")
+    public ProductDto findByName(@PathVariable String name) {
+        return productService.findByName(name);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/product")
-    public List<ProductDto> getAllProducts() {
-        return productService.getAllProducts();
+    public List<ProductDto> findAllProducts() {
+        return productService.findAll();
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(value = "/product")
-    public ProductDto updateProduct(@RequestBody ProductDto productDto) {
+    public ProductDto update(@RequestBody ProductDto productDto) {
         validateProduct(productDto);
-        return productService.updateProduct(productDto);
+        return productService.update(productDto);
     }
 
 
-    @DeleteMapping(value = "/product/{productId}")
-    public boolean deleteProduct(@PathVariable int productId) {
+    @DeleteMapping(value = "/product/id/{productId}")
+    public boolean delete(@PathVariable int productId) {
         return productService.deleteProduct(productId);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/product/{productId}")
-    public ProductDto getProductById(@PathVariable int productId) {
-        return productService.getProductById(productId);
+    @GetMapping(value = "/product/id/{productId}")
+    public ProductDto getById(@PathVariable int productId) {
+        return productService.getById(productId);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/product/{code}")
-    public ProductDto getProductByCode(@PathVariable String code) {
-        return productService.getProductByCode(code);
+    @GetMapping(value = "/product/code/{code}")
+    public ProductDto findByCode(@PathVariable String code) {
+        return productService.findByCode(code);
     }
 
     private void validateProduct(ProductDto productDto){

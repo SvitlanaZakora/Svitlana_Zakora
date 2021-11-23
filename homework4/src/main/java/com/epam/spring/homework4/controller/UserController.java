@@ -16,21 +16,21 @@ public class UserController{
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/user")
-    public UserDto createUser(@RequestBody UserDto userDto) {
+    public UserDto save(@RequestBody UserDto userDto) {
         validateUser(userDto);
-        return userService.createUser(userDto);
+        return userService.save(userDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/user/login/{login}")
-    public UserDto getUserByLogin(@PathVariable String login) {
-        return userService.getUserByLogin(login);
+    public UserDto findByLogin(@PathVariable String login) {
+        return userService.findByLogin(login);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/user/{userId}")
-    public UserDto getUserById(@PathVariable int userId) {
-        return userService.getUserById(userId);
+    public UserDto findById(@PathVariable int userId) {
+        return userService.findById(userId);
     }
 
     private void validateUser(UserDto userDto){

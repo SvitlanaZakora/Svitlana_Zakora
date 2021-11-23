@@ -1,12 +1,16 @@
 package com.epam.spring.homework4.service.impl;
 
 import com.epam.spring.homework4.dto.ProductDto;
+import com.epam.spring.homework4.exceptions.DublicateEntryException;
+import com.epam.spring.homework4.exceptions.NotFoundException;
 import com.epam.spring.homework4.service.ProductService;
 import com.epam.spring.homework4.model.Product;
 import com.epam.spring.homework4.model.User;
 import com.epam.spring.homework4.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,61 +21,79 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
+    @Autowired
     private final ProductRepository productRepository;
 
     @Override
-    public ProductDto createProduct(ProductDto productDto) {
+    public ProductDto save(ProductDto productDto) {
         log.info("create product with name {}",productDto.getName());
         Product product = mapProductDtoToProduct(productDto);
-        product = productRepository.createProduct(product);
+
+        try {
+            product = productRepository.save(product);
+        } catch (DataIntegrityViolationException e) {
+            throw new DublicateEntryException("Duplicate entry "+product.getName());
+        }
         return mapProductToProductDto(product);
     }
 
     @Override
-    public ProductDto getProductByName(String name) {
+    public ProductDto findByName(String name) {
         log.info("get product by name {} ",name);
-        Product product = productRepository.getProductByName(name);
+        Product product = productRepository.findByName(name);
         return mapProductToProductDto(product);
     }
 
     @Override
-    public List<ProductDto> getAllProducts() {
+    public List<ProductDto> findAll() {
         log.info("get all products");
-        return productRepository.getAllProducts().stream()
-                .map(this::mapProductToProductDto)
+        return productRepository.findAll().stream()
+                .map(ProductServiceImpl::mapProductToProductDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ProductDto updateProduct(ProductDto productDto) {
+    public ProductDto update(ProductDto productDto) {
         log.info("update product with name {}", productDto.getName());
         Product product = mapProductDtoToProduct(productDto);
-        product = productRepository.updateProduct(product);
+        try {
+            productRepository.getById(product.getId());
+        }catch (NullPointerException e) {
+            log.error("No product " + product.getName());
+            throw new NotFoundException("No product " + product.getName());
+        }
+        productRepository.save(product);
         return mapProductToProductDto(product);
     }
 
     @Override
     public boolean deleteProduct(int productId) {
         log.info("delete product with id {}",productId);
-        boolean isDeleted = productRepository.deleteProduct(productId);
-        return isDeleted;
+        try {
+            productRepository.getById(productId);
+        }catch (NullPointerException e) {
+            log.error("No product with id " + productId);
+            throw new NotFoundException("No product with id " + productId);
+        }
+        productRepository.deleteById(productId);
+        return true;
     }
 
     @Override
-    public ProductDto getProductById(int productId) {
+    public ProductDto getById(int productId) {
         log.info("get product by id {} ",productId);
-        Product product = productRepository.getProductById(productId);
+        Product product = productRepository.getById(productId);
         return mapProductToProductDto(product);
     }
 
     @Override
-    public ProductDto getProductByCode(String code) {
+    public ProductDto findByCode(String code) {
         log.info("get product by code {} ",code);
-        Product product = productRepository.getProductByCode(code);
+        Product product = productRepository.findByCode(code);
         return mapProductToProductDto(product);
     }
 
-    private ProductDto mapProductToProductDto(Product product){
+    public static ProductDto mapProductToProductDto(Product product){
         return ProductDto.builder()
                 .id(product.getId())
                 .name(product.getName())
