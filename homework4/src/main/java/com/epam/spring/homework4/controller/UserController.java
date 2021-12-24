@@ -16,9 +16,9 @@ public class UserController{
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/user")
-    public UserDto save(@RequestBody UserDto userDto) {
+    public UserDto insert(@RequestBody UserDto userDto) {
         validateUser(userDto);
-        return userService.save(userDto);
+        return userService.insert(userDto);
     }
 
     @ResponseStatus(HttpStatus.OK)

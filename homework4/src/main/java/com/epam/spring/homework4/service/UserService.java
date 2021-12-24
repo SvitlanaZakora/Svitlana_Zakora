@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService {
-    UserDto save(UserDto userDto);
+    UserDto insert(UserDto userDto);
     UserDto findByLogin(String login);
     UserDto findById(int userId);
 }

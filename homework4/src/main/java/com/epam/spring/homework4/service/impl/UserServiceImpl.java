@@ -6,15 +6,10 @@ import com.epam.spring.homework4.service.UserService;
 import com.epam.spring.homework4.model.User;
 import com.epam.spring.homework4.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 
 @Slf4j
 @Service
@@ -25,7 +20,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDto save(UserDto userDto) {
+    public UserDto insert(UserDto userDto) {
         log.info("create user with login {}",userDto.getLogin());
         User user = mapUserDtoToUser(userDto);
         try {
@@ -46,7 +41,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findById(int userId) {
         log.info("get user by id {} ",userId);
-        User user = userRepository.getById(userId);
+        User user = userRepository.findById(userId);
         return mapUserToUserDto(user);
     }
 
